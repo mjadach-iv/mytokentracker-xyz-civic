@@ -4,7 +4,7 @@ This project, **TokenTracker**, integrates Civic Auth as the single sign-on (SSO
 
 ## Project Description
 
-MyTokenTracker lets users track Ethereum EOA wallet assets privately by not leaking metadata and without accessing blockchain data directly.
+MyTokenTracker uses uHTTP, powered by the HOPR protocol, to fetch and display the address’s mainnet balances on the screen. This happens without leaking any metadata, thanks to HOPR’s privacy layer (https://hoprnet.org)
 
 ## Features
 - **Civic Auth Integration**: Implemented as the sole SSO provider for user authentication, ensuring a frictionless sign-in process.
