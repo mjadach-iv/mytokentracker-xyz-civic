@@ -62,7 +62,7 @@ VITE_JSONBIN_API_KEY=
 - Andrius Stepaitis (andrius@hoprnet.org)
 
 ## YouTube Demo Video
-A demo video showcasing the integration of Civic Auth and the user experience of TokenTracker is available here: [YOUTUBE_LINK]
+A demo video showcasing the integration of Civic Auth and the user experience of TokenTracker is available here: [https://youtu.be/IpB87Hr9Pfs](https://youtu.be/IpB87Hr9Pfs)
 
 ## Live Demo
 The application is deployed and publicly accessible at:  
