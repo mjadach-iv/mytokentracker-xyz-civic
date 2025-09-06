@@ -8,10 +8,13 @@ MyTokenTracker uses uHTTP, powered by the HOPR protocol, to fetch and display th
 
 ## Features
 - **Civic Auth Integration**: Implemented as the sole SSO provider for user authentication, ensuring a frictionless sign-in process.
+- **Civic Embedded ETH Wallet**: Used to encrypt and decrypt securly the ETH Address of the SSO account owner
 - **Token Data Endpoint**: Access token information via the `/logo/{TOKEN_ETHEREUM_ADDRESS}` endpoint.
 - **Websocket Logs**: Real-time client logs available through the `/client_logs/websocket` endpoint.
 - **Token List**: Sourced from `server/tokens.json` for reliable token data.
 - **Public Demo**: Hosted on Vercel at [https://mytokentracker-xyz-civic.vercel.app/](https://mytokentracker-xyz-civic.vercel.app/).
+
+## Civic Integration:
 
 ## How to Run Locally
 ### Backend
@@ -42,10 +45,12 @@ MyTokenTracker uses uHTTP, powered by the HOPR protocol, to fetch and display th
 ### Frontend Environment Variables
 Create a `.env` file in the `frontend` directory with the following:
 ```plaintext
-REACT_APP_BACKEND_URL=tokentracker.hoprnet.workers.dev  # Use '127.0.0.1:8787' for local server
-REACT_APP_uHTTP_DP_ENDPOINT=  # Leave empty to use default
-REACT_APP_uHTTP_TOKEN=
-REACT_APP_uHTTP_FORCE_ZERO_HOP=true
+VITE_BACKEND_URL=backend.mytokentracker.xyz  //'127.0.0.1:8787' if local server is used
+VITE_uHTTP_DP_ENDPOINT= //leave empty to use default
+VITE_uHTTP_TOKEN=
+VITE_uHTTP_FORCE_ZERO_HOP=true
+VITE_CIVIC_CLIENT_ID=
+VITE_JSONBIN_API_KEY=
 ```
 
 ## Contributors
@@ -58,3 +63,4 @@ A demo video showcasing the integration of Civic Auth and the user experience of
 ## Live Demo
 The application is deployed and publicly accessible at:  
 [https://mytokentracker-xyz-civic.vercel.app/](https://mytokentracker-xyz-civic.vercel.app/)
+
