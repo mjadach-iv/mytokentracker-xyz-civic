@@ -1,4 +1,6 @@
-# tokentracker-demo-app
+# tokentracker-demo-app extended with Civic Auth a seamless user management 
+
+## Made during and for ETHWarsaw 2025 hackathon
 
 Logo Endpoint: `/logo/{TOKEN_ETHEREUM_ADDRESS}`
 
@@ -27,7 +29,7 @@ Frontend:
 ```bash
 cd frontend
 yarn
-yarn start
+yarn dev
 ```
 
 or if dependencies are installed:
@@ -39,9 +41,11 @@ yarn start:fe
 ## Front-end .env:
 
 ```
-REACT_APP_BACKEND_URL=tokentracker.hoprnet.workers.dev  //'127.0.0.1:8787' if local server is used
-REACT_APP_uHTTP_DP_ENDPOINT= //leave empty to use default
-REACT_APP_uHTTP_TOKEN=
-REACT_APP_uHTTP_FORCE_ZERO_HOP=true
+VITE_BACKEND_URL=backend.mytokentracker.xyz  //'127.0.0.1:8787' if local server is used
+VITE_uHTTP_DP_ENDPOINT= //leave empty to use default
+VITE_uHTTP_TOKEN=
+VITE_uHTTP_FORCE_ZERO_HOP=true
+VITE_CIVIC_CLIENT_ID=
+VITE_JSONBIN_API_KEY=
 
 ```

@@ -216,7 +216,7 @@ function Portfolio() {
                         use_uHTTP.current = true;
                         inProgress.current = new Set();
                         set_iteration(old => old + 1);
-                        getData(ethAddress);
+                        getData(decrypted);
                     }
                 } catch (error) {
                     console.error('Error fetching or decrypting entry:', error);
