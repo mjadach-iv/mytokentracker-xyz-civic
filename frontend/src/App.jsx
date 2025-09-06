@@ -14,6 +14,8 @@ import { mainnet } from "viem/chains";
 import { http } from "viem";
 import { createConfig, WagmiProvider } from "wagmi";
 
+
+/* Wagmi + Viem + Civic Embedded Wallet setup */
 const wagmiConfig = createConfig({
   chains: [mainnet],
   transports: {

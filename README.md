@@ -15,6 +15,10 @@ MyTokenTracker uses uHTTP, powered by the HOPR protocol, to fetch and display th
 - **Public Demo**: Hosted on Vercel at [https://mytokentracker-xyz-civic.vercel.app/](https://mytokentracker-xyz-civic.vercel.app/).
 
 ## Civic Integration:
+ - [Addtion of the Civic NPM package]()
+ - [Integration of the Civic Embedded wallet using Viem]()
+ - [Code that uses the Civic Embedded wallet for encrpting and decrypting private data](Integration of the Civic Embedded wallet using Viem)
+ - [Civic Connect widget styles]()
 
 ## How to Run Locally
 ### Backend
