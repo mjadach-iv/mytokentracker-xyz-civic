@@ -15,10 +15,10 @@ MyTokenTracker uses uHTTP, powered by the HOPR protocol, to fetch and display th
 - **Public Demo**: Hosted on Vercel at [https://mytokentracker-xyz-civic.vercel.app/](https://mytokentracker-xyz-civic.vercel.app/).
 
 ## Civic Integration:
- - [Addtion of the Civic NPM package]()
- - [Integration of the Civic Embedded wallet using Viem]()
- - [Code that uses the Civic Embedded wallet for encrpting and decrypting private data](Integration of the Civic Embedded wallet using Viem)
- - [Civic Connect widget styles]()
+ - [Addtion of the Civic NPM package](https://github.com/mjadach-iv/mytokentracker-xyz-civic/blob/27594e08b8ad778bba1b254a9f4fa14c7ddf0edc/frontend/package.json#L6)
+ - [Integration of the Civic Embedded wallet using Viem](https://github.com/mjadach-iv/mytokentracker-xyz-civic/blob/27594e08b8ad778bba1b254a9f4fa14c7ddf0edc/frontend/src/App.jsx#L18)
+ - [Code that uses the Civic Embedded wallet for encrpting and decrypting private data](https://github.com/mjadach-iv/mytokentracker-xyz-civic/blob/27594e08b8ad778bba1b254a9f4fa14c7ddf0edc/frontend/src/Portfolio.jsx#L161)
+ - [Civic Connect widget styles](https://github.com/mjadach-iv/mytokentracker-xyz-civic/blob/27594e08b8ad778bba1b254a9f4fa14c7ddf0edc/frontend/src/civic.css#L1)
 
 ## How to Run Locally
 ### Backend
