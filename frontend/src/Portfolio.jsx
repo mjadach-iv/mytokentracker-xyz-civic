@@ -150,34 +150,38 @@ function Portfolio() {
     const numberOfAddresses = (Math.floor(db.uniqueAddresses.uniqueAddresses / roundTo) * roundTo).toLocaleString('en-US', { maximumFractionDigits: 10 });
 
 
-    /* Civic */
+    /* Civic integration code */
     useAutoConnect();
     const user = useUser();
     const account = useAccount();
     const { signMessageAsync } = useSignMessage();
 
+    // Derive deterministically a symmetric key from the signed message by the Civic embedded wallet.
+    // Uses SHA-256 of the UTF-8 encoded signature as raw key material; returns a key for encrypt/decrypt.
     const deriveKeyFromSignature = async (signature) => {
-    const enc = new TextEncoder();
-    const hash = await crypto.subtle.digest('SHA-256', enc.encode(signature));
-    return crypto.subtle.importKey('raw', hash, { name: 'AES-GCM' }, false, ['encrypt','decrypt']);
+        const enc = new TextEncoder();
+        const hash = await crypto.subtle.digest('SHA-256', enc.encode(signature));
+        return crypto.subtle.importKey('raw', hash, { name: 'AES-GCM' }, false, ['encrypt','decrypt']);
     };
 
+    // Encrypt input string using a key derived from the signed message by the Civic provided Ethereum account.
     const encryptWithEmbeddedWallet = async (plaintext) => {
-    if (!account?.address) return null;
-    const nonceBytes = crypto.getRandomValues(new Uint8Array(32));
-    const nonceHex = Array.from(nonceBytes).map(b=>b.toString(16).padStart(2,'0')).join('');
-    const signature = await signMessageAsync({ message: nonceHex });
-    const key = await deriveKeyFromSignature(signature);
-    const iv = crypto.getRandomValues(new Uint8Array(12));
-    const ctBuffer = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(plaintext));
-    const ciphertextHex = Array.from(new Uint8Array(ctBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
-    const ivHex = Array.from(iv).map(b=>b.toString(16).padStart(2,'0')).join('');
-    console.log('[EmbeddedWallet Encryption]', { ciphertext: ciphertextHex, iv: ivHex, nonce: nonceHex });
-    return { ciphertext: ciphertextHex, iv: ivHex, nonce: nonceHex };
+        if (!account?.address) return null;
+        const nonceBytes = crypto.getRandomValues(new Uint8Array(32));
+        const nonceHex = Array.from(nonceBytes).map(b=>b.toString(16).padStart(2,'0')).join('');
+        const signature = await signMessageAsync({ message: nonceHex });
+        const key = await deriveKeyFromSignature(signature);
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const ctBuffer = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(plaintext));
+        const ciphertextHex = Array.from(new Uint8Array(ctBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
+        const ivHex = Array.from(iv).map(b=>b.toString(16).padStart(2,'0')).join('');
+        console.log('[EmbeddedWallet Encryption]', { ciphertext: ciphertextHex, iv: ivHex, nonce: nonceHex });
+        return { ciphertext: ciphertextHex, iv: ivHex, nonce: nonceHex };
     };
 
     const hexToBytes = (hex) => new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)));
 
+    // Decrypt using a key derived from the signed message by the Civic provided Ethereum account.
     const decryptWithEmbeddedWallet = async ({ ciphertext, iv, nonce }) => {
     if (!account?.address) return null;
     try {
@@ -195,9 +199,12 @@ function Portfolio() {
     }
     };
 
+    // State to track if the ETH address is saved in DB
     const [ethAddressSavedInDB, set_ethAddressSavedInDB] = React.useState(null);
     const [binId, set_binId] = React.useState(null);
     const [loading, set_loading] = React.useState(false);
+
+    // On Civic user change, try to fetch and decrypt the ETH address from the DB
     useEffect(() => {
         console.log('CivicLogic useEffect - user/account changed', user);
         if (user && user?.user && user?.user?.id) {
@@ -227,6 +234,7 @@ function Portfolio() {
         };
     }, [user, account?.address]);
 
+    // Save or update the ETH address in the DB
     const saveEthAddress = async (ethAddress, update = false, binId) => {
         if (!user?.user || !account?.address) return;
         const encrypted = await encryptWithEmbeddedWallet(ethAddress);
@@ -256,6 +264,7 @@ function Portfolio() {
 
     return (
         <div className={`portfolio-container ${portfolio ? 'portfolio-present' : 'no-portfolio'}`}>
+            {/* Using OverlaySpinner to indicate loading state based on the Civic isLoading variable and DB loader */}
             <OverlaySpinner
                 show={loading || user.isLoading}
             />

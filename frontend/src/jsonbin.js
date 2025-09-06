@@ -1,3 +1,7 @@
+/** Data storage using JSONBin.io service 
+  * Great for prototyping for the hackaton, not for production! 
+  * Best to use your own backend with a real database. */
+
 const BASE = 'https://api.jsonbin.io/v3';
 const MASTER_KEY = import.meta.env.VITE_JSONBIN_API_KEY;
 console.log('JSONBin master key loaded?', MASTER_KEY);
@@ -20,7 +24,7 @@ async function jsonbinRequest(path, { method = 'GET', body }) {
   return res.json();
 }
 
-// Create a new bin with 3 strings bound to a recordId
+// Create a new bin with encrypted data bound to a recordId from Civic
 export async function createEntry({ userId, ciphertext, iv, nonce }) {
   const payload = { userId, ciphertext, iv, nonce };
   const json = await jsonbinRequest('/b', { method: 'POST', body: payload });
@@ -34,7 +38,7 @@ export async function updateEntry({ binId, userId, ciphertext, iv, nonce }) {
   return { binId: json?.metadata?.id || binId, payload: json?.record };
 }
 
-// Fetch latest version of a bin
+// Fetch latest version of a an existing bin
 export async function fetchEntry({ binId }) {
   const json = await jsonbinRequest(`/b/${binId}/latest`, { method: 'GET' });
   return { binId: json?.metadata?.id || binId, payload: json?.record };
