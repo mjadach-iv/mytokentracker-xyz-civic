@@ -1,13 +1,13 @@
 const BASE = 'https://api.jsonbin.io/v3';
 const MASTER_KEY = import.meta.env.VITE_JSONBIN_API_KEY;
-// console.log('JSONBin master key loaded?', !!MASTER_KEY);
+console.log('JSONBin master key loaded?', MASTER_KEY);
 
 // Internal request helper
 async function jsonbinRequest(path, { method = 'GET', body }) {
   if (!MASTER_KEY) throw new Error('Missing JSONBin MASTER_KEY');
   const headers = { 'X-Master-Key': MASTER_KEY };
   if (body) headers['Content-Type'] = 'application/json';
-  if (method === "POST") headers['X-Collection-Id'] = '68bc335ed0ea881f4073e328';
+  if (method === "POST" || method === "PUT") headers['X-Collection-Id'] = '68bc335ed0ea881f4073e328';
   const res = await fetch(`${BASE}${path}`, {
     method,
     headers,
@@ -21,15 +21,15 @@ async function jsonbinRequest(path, { method = 'GET', body }) {
 }
 
 // Create a new bin with 3 strings bound to a recordId
-export async function createEntry({ recordId, s1, s2, s3 }) {
-  const payload = { recordId, s1, s2, s3 };
+export async function createEntry({ userId, ciphertext, iv, nonce }) {
+  const payload = { userId, ciphertext, iv, nonce };
   const json = await jsonbinRequest('/b', { method: 'POST', body: payload });
   return { binId: json?.metadata?.id || json?.id, payload: json?.record };
 }
 
 // Update an existing bin completely (PUT replaces whole document)
-export async function updateEntry({ binId, recordId, s1, s2, s3 }) {
-  const payload = { recordId, s1, s2, s3 };
+export async function updateEntry({ binId, userId, ciphertext, iv, nonce }) {
+  const payload = { userId, ciphertext, iv, nonce };
   const json = await jsonbinRequest(`/b/${binId}`, { method: 'PUT', body: payload });
   return { binId: json?.metadata?.id || binId, payload: json?.record };
 }
@@ -47,14 +47,17 @@ export async function listBinsInCollection() {
 }
 
 // Convenience: gather all bins across all collections (sequential)
-export async function getEntry(recordId) {
+export async function getEntry(userId) {
   const collections = await listBinsInCollection();
   console.log('Collections:', collections);
   for (const c of collections) {
     try {
       const binId = c.record;
       const bin = await fetchEntry({ binId });
-      if (bin.payload?.recordId === recordId) return bin;
+      if (bin.payload?.userId === userId) return {
+        binId,
+        ...bin
+      };
     } catch (e) {
       console.warn('Failed listing bins for collection');
     }

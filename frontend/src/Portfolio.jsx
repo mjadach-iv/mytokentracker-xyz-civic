@@ -195,21 +195,8 @@ function Portfolio() {
     }
     };
 
-    const saveEthAddress = async (ethAddress) => {
-        if (!user?.user || !account?.address) return;
-        const encrypted = await encryptWithEmbeddedWallet(ethAddress);
-        if (!encrypted) return;
-        console.log('Saving encrypted ETH address:', encrypted);
-        const saveRez = await createEntry({
-            recordId: user.user.id,
-            s1: encrypted.ciphertext,
-            s2: encrypted.iv,
-            s3: encrypted.nonce
-        });
-        console.log('Save result:', saveRez);
-    }
-
     const [ethAddressSavedInDB, set_ethAddressSavedInDB] = React.useState(null);
+    const [binId, set_binId] = React.useState(null);
     const [loading, set_loading] = React.useState(false);
     useEffect(() => {
         console.log('CivicLogic useEffect - user/account changed', user);
@@ -221,11 +208,11 @@ function Portfolio() {
                     const bin = await getEntry(id);
                     if(!bin || !bin.payload) return;
                     console.log('Bin:', bin);
-                    const decrypted = await decryptWithEmbeddedWallet({ ciphertext: bin.payload.s1, iv: bin.payload.s2, nonce: bin.payload.s3 });
+                    const decrypted = await decryptWithEmbeddedWallet({ ciphertext: bin.payload.ciphertext, iv: bin.payload.iv, nonce: bin.payload.nonce });
                     if (decrypted && decrypted.startsWith('0x') && decrypted.length === 42) {
                         set_ethAddress(decrypted);
                         set_ethAddressSavedInDB(true);
-
+                        set_binId(bin.binId);
                         use_uHTTP.current = true;
                         inProgress.current = new Set();
                         set_iteration(old => old + 1);
@@ -240,7 +227,32 @@ function Portfolio() {
         };
     }, [user, account?.address]);
 
-
+    const saveEthAddress = async (ethAddress, update = false, binId) => {
+        if (!user?.user || !account?.address) return;
+        const encrypted = await encryptWithEmbeddedWallet(ethAddress);
+        if (!encrypted) return;
+        console.log('Saving encrypted ETH address:', encrypted);
+        if (update) {
+            const updateRez = await updateEntry({
+                binId,
+                userId: user.user.id,
+                ciphertext: encrypted.ciphertext,
+                iv: encrypted.iv,
+                nonce: encrypted.nonce
+            });
+            console.log('Update result:', updateRez);
+        }
+        else {
+            const saveRez = await createEntry({
+                userId: user.user.id,
+                ciphertext: encrypted.ciphertext,
+                iv: encrypted.iv,
+                nonce: encrypted.nonce
+            });
+            set_ethAddressSavedInDB(true);
+            console.log('Save result:', saveRez);
+        }
+    }
 
     return (
         <div className={`portfolio-container ${portfolio ? 'portfolio-present' : 'no-portfolio'}`}>
@@ -268,9 +280,9 @@ function Portfolio() {
                         <div>
                             <input
                                 type="button"
-                                value="Assign ETH address to the account"
+                                value={`${ ethAddressSavedInDB ? 'Update' : 'Assign'} ETH address to the account`}
                                 onClick={() => {
-                                    saveEthAddress(ethAddress)
+                                    saveEthAddress(ethAddress, ethAddressSavedInDB, binId);
                                     use_uHTTP.current = true;
                                     inProgress.current = new Set();
                                     set_iteration(old => old + 1);
