@@ -1,51 +1,60 @@
-# tokentracker-demo-app extended with Civic Auth a seamless user management 
+# TokenTracker Demo App with Civic Auth Integration
 
-## Made during and for ETHWarsaw 2025 hackathon
+This project, **TokenTracker**, integrates Civic Auth as the single sign-on (SSO) provider to enable secure and seamless user authentication for a token tracking application.
 
-Logo Endpoint: `/logo/{TOKEN_ETHEREUM_ADDRESS}`
+## Project Description
 
-Websocket Logs Endpoint: `/client_logs/websocket`
+MyTokenTracker uses uHTTP, powered by the HOPR protocol, to fetch and display the address’s mainnet balances on the screen. This happens without leaking any metadata, thanks to HOPR’s privacy layer (https://hoprnet.org)
 
-Token list is taken from `server/tokens.json`
+## Features
+- **Civic Auth Integration**: Implemented as the sole SSO provider for user authentication, ensuring a frictionless sign-in process.
+- **Token Data Endpoint**: Access token information via the `/logo/{TOKEN_ETHEREUM_ADDRESS}` endpoint.
+- **Websocket Logs**: Real-time client logs available through the `/client_logs/websocket` endpoint.
+- **Token List**: Sourced from `server/tokens.json` for reliable token data.
+- **Public Demo**: Hosted on Vercel at [https://mytokentracker-xyz-civic.vercel.app/](https://mytokentracker-xyz-civic.vercel.app/).
 
-## Run locally
+## How to Run Locally
+### Backend
+1. Install dependencies:
+   ```bash
+   yarn
+   ```
+2. Start the backend:
+   ```bash
+   yarn start:be
+   ```
+   or use `wrangler dev` for development.
 
-Backend:
+### Frontend
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   yarn
+   ```
+3. Start the frontend:
+   ```bash
+   yarn start:fe
+   ```
 
-
-```bash
-yarn
-wrangler dev
+### Frontend Environment Variables
+Create a `.env` file in the `frontend` directory with the following:
+```plaintext
+REACT_APP_BACKEND_URL=tokentracker.hoprnet.workers.dev  # Use '127.0.0.1:8787' for local server
+REACT_APP_uHTTP_DP_ENDPOINT=  # Leave empty to use default
+REACT_APP_uHTTP_TOKEN=
+REACT_APP_uHTTP_FORCE_ZERO_HOP=true
 ```
 
-or if dependencies are installed:
+## Contributors
+- Michal Jadach (michal.jadach@hoprnet.org)
+- Andrius Stepaitis (andrius@hoprnet.org)
 
-```bash
-yarn start:be
-```
+## YouTube Demo Video
+A demo video showcasing the integration of Civic Auth and the user experience of TokenTracker is available here: [YOUTUBE_LINK]
 
-Frontend:
-
-```bash
-cd frontend
-yarn
-yarn dev
-```
-
-or if dependencies are installed:
-
-```bash
-yarn start:fe
-```
-
-## Front-end .env:
-
-```
-VITE_BACKEND_URL=backend.mytokentracker.xyz  //'127.0.0.1:8787' if local server is used
-VITE_uHTTP_DP_ENDPOINT= //leave empty to use default
-VITE_uHTTP_TOKEN=
-VITE_uHTTP_FORCE_ZERO_HOP=true
-VITE_CIVIC_CLIENT_ID=
-VITE_JSONBIN_API_KEY=
-
-```
+## Live Demo
+The application is deployed and publicly accessible at:  
+[https://mytokentracker-xyz-civic.vercel.app/](https://mytokentracker-xyz-civic.vercel.app/)
